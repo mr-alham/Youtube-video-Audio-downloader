@@ -10,12 +10,18 @@ pip install pytube
 ```python
 pip install clipboard
 ```
+![Alt example screenshot of pip installation.](https://i.imgur.com/1goz1jT.png?raw=true "pip installation")
 
 ## How to use
 * To use this script, simply run the following command:
 ```python
 python youtube_downloader.py
 ```
+##### YouTube video downloading demonstration
+![Alt demo screenshot of YouTube video downloading using this script.](https://i.imgur.com/nBeRhx6.png?raw=true "demo of YouTube video downloader")
+##### YouTube audio downloading demonstration
+![Alt example screenshot of YouTube video downloading using this script.](https://i.imgur.com/obl0vSC.png?raw=true "demo of YouTube audio downloader")
+
 ### Brief description
 You will be prompted to enter the URL of the video you wish to download. You can also copy the URL to the clipboard and simply hit enter to automatically paste it.
 
