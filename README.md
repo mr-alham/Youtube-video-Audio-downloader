@@ -1,6 +1,8 @@
 # YouTube Video/Audio Downloader
 This Python script allows you to download videos and audios from YouTube by simply entering the URL of the video. It uses the PyTube library to download the desired format of the video or audio. The script has a colorful terminal output.
 
+### !Unfortunately this will only work as intended on linux os only and maybe on mac os
+
 ## Prerequisites
 * Before running this script, you will need to install PyTube by running the following command:
 
