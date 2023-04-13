@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+'''This Python script allows you to download videos and audios from YouTube by simply entering the URL of the video. \
+It uses the PyTube library to download the desired format of the video or audio. \
+The script has a colorful terminal output.
+*** curently this will only work on only linux as intended '''
+
+
 import subprocess
 import sys
 from pytube import YouTube
@@ -8,20 +14,21 @@ from os import getlogin as user_name
 import os
 
 
-def color(color):  # for the terminal color output
+def color(color):
+    '''ansi color codes to get colored output on termainl'''
+
     colors = {'reset': '\033[0m',
               'red': '\033[31m',
               'green': '\033[32m',
               'yellow': '\033[33m',
               'blue': '\033[34m',
-              'magenta': '\033[35m',
-              'cyan': '\033[36m',
               'white': '\033[37m',
               'bold': '\033[1m',
               'underlined': '\033[4m',
               'italic': '\033[3m'}
 
     string = ''
+
     for clr in color:
         string += colors[clr]
 
@@ -36,11 +43,12 @@ class ytube():
 
         def title(self):
             yt = self.yt
-            return f'{color(["blue","italic"])}\t{yt.title}{color(["reset"])}'
+            return f'{color(["bold","blue"])}Title: {color(["reset","blue","italic"])}{yt.title}{color(["reset"])}'
     except:
         print(f'{color(["red"])}an error occurred!{color(["reset"])}')
 
     def download_path(self):
+        '''determine the download path on each operating system to download and if couldn't download on current working direcotory'''
 
         if os.name == 'nt':
             download_path = os.path.join(os.path.expanduser('~'), 'Downloads')
@@ -56,7 +64,9 @@ class ytube():
 
         return download_path
 
-    def Video(self):  # video configurations
+    def Video(self):
+        '''if wanted to download the youtube video processes for that will happen here'''
+
         yt = self.yt
 
         streams = {1: '144p',
@@ -100,12 +110,32 @@ class ytube():
         sys.exit()
 
     def Audio(self):
+        '''if want to download only audio from youtube video processes for that will happen here'''
+
         yt = self.yt
         print(
             f'downloading{color(["white","bold"])}.{color(["blue"])}.{color(["green"])}.{color(["reset","green"])}')
 
         audio = yt.streams.get_audio_only()
-        audio.download(self.download_path())
+
+        file_location = str(audio.download(
+            self.download_path())).replace(' ', '\x20')
+
+        mp3_file_locaton = file_location[:file_location.rfind('.')]+'.mp3'
+
+        try:
+
+            '''when we try to download audio version through pytube we can\'t download as mp3. so in here converting mp4 into mp3'''
+
+            ffmpeg_cmd = ["ffmpeg", "-i", file_location, "-vn", "-acodec",
+                          "libmp3lame", "-b:a", "192k", "-loglevel", "error", mp3_file_locaton]
+            subprocess.check_output(ffmpeg_cmd, stderr=subprocess.STDOUT)
+            subprocess.run(["gio", "trash", file_location])
+
+            print('Successfully converted to mp3')
+
+        except subprocess.CalledProcessError as e:
+            print('Error during converting mp4 to mp3:', e.output.decode())
 
         print(
             f'downloaded on {color(["blue","italic"])}{self.download_path()}')
@@ -163,7 +193,7 @@ if check_internet_connection():
     except AttributeError:
         print('invalid url')
     except KeyboardInterrupt:
-        print('aborting!')
+        print('\naborting!')
         sys.exit()
     except KeyError:
         print('invalied stream number')
