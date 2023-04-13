@@ -1,7 +1,8 @@
+
 #!/usr/bin/env python3
 
-'''This Python script allows you to download videos and audios from YouTube by simply entering the URL of the video. \
-It uses the PyTube library to download the desired format of the video or audio. \
+'''This Python script allows you to download videos and audios from YouTube by simply entering the URL of the video.
+It uses the PyTube library to download the desired format of the video or audio.
 The script has a colorful terminal output.
 *** curently this will only work on only linux as intended '''
 
@@ -88,14 +89,11 @@ class ytube():
         print()
 
         for stream in streams:
-            print(
-                f'{color(["bold","red"])}{stream}. {color(["reset","green"])}{streams[stream]}')
+            print(f'\t{color(["bold","red"])}{stream}. {color(["reset","green"])}{streams[stream]}')
 
-        video_format = input(
-            f'choose a video stream to download.(press enter for 360p): ')
+        video_format = input(f'choose a video stream to download.(press enter for 360p): ')
 
-        print(
-            f'downloading{color(["white","bold"])}.{color(["blue"])}.{color(["green"])}.{color(["reset","green"])}')
+        print(f'downloading{color(["white","bold"])}.{color(["blue"])}.{color(["green"])}.{color(["reset","green"])}')
 
         if video_format == '':
             video_format = '3'
@@ -104,22 +102,19 @@ class ytube():
 
         video.download(self.download_path())
 
-        print(
-            f'downloaded on {color(["blue","italic"])}{self.download_path()}')
+        print(f'downloaded on {color(["blue","italic"])}{self.download_path()}')
 
         sys.exit()
 
     def Audio(self):
         '''if want to download only audio from youtube video processes for that will happen here'''
-
+        
         yt = self.yt
-        print(
-            f'downloading{color(["white","bold"])}.{color(["blue"])}.{color(["green"])}.{color(["reset","green"])}')
+        print(f'downloading{color(["white","bold"])}.{color(["blue"])}.{color(["green"])}.{color(["reset","green"])}')
 
         audio = yt.streams.get_audio_only()
 
-        file_location = str(audio.download(
-            self.download_path())).replace(' ', '\x20')
+        file_location = str(audio.download(self.download_path())).replace(' ', '\x20')
 
         mp3_file_locaton = file_location[:file_location.rfind('.')]+'.mp3'
 
@@ -127,8 +122,7 @@ class ytube():
 
             '''when we try to download audio version through pytube we can\'t download as mp3. so in here converting mp4 into mp3'''
 
-            ffmpeg_cmd = ["ffmpeg", "-i", file_location, "-vn", "-acodec",
-                          "libmp3lame", "-b:a", "192k", "-loglevel", "error", mp3_file_locaton]
+            ffmpeg_cmd = ["ffmpeg", "-i", file_location, "-vn", "-acodec","libmp3lame", "-b:a", "192k", "-loglevel", "error", mp3_file_locaton]
             subprocess.check_output(ffmpeg_cmd, stderr=subprocess.STDOUT)
             subprocess.run(["gio", "trash", file_location])
 
@@ -144,34 +138,33 @@ class ytube():
 
 
 def welcome():
-    print(
-        f'{color(["bold","green"])}Youtube {color(["underlined","italic"])}Video/Audio{color(["reset","bold","green"])} Downloader by {color(["white","italic"])}Alham_{color(["red"])}\U0000270C{color(["reset"])}')
+    print(f'{color(["bold","green"])}Youtube {color(["underlined","italic"])}Video/Audio{color(["reset","bold","green"])} Downloader by {color(["white","italic"])}Alham_{color(["red"])}\U0000270C{color(["reset"])}')
 
-    link = str(input(
-        f'enter url {color(["italic"])}(enter to copy from clipboard){color(["reset"])}: '))
+    link = str(input(f'enter url {color(["italic"])}(enter to copy from clipboard){color(["reset"])}: '))
+    
     if link == '':
         link = clipboard.paste()
 
     utube = ytube(link)
 
     print(utube.title())
+    
+    def decision():
+        decs = input(f'{color(["red","bold"])}\
+    1. {color(["reset","green"])}Video{color(["reset"])}\n{color(["red","bold"])}\
+    2. {color(["reset","green"])}Audio\nselect a format(press enter for Audio): ')
+        return decs
 
-    decision = input(
-        f'{color(["red","bold"])}1. {color(["reset","green"])}Video{color(["reset"])}\n{color(["red","bold"])}2. {color(["reset","green"])}Audio\nselect a format(press enter for Audio): ')
-
-    if decision == '1':
+    decs = str(decision())
+    if decs == '1':
         utube.Video()
-    elif decision == '2' or decision == '':
+    elif decs == '2' or decs == '':
         utube.Audio()
     else:
-        print(f'couldn\'t recognize the request')
-
-        decision = input(
-            f'{color(["red","bold"])}1. {color(["reset","green"])}Video{color(["reset"])}\n{color(["red","bold"])}2. {color(["reset","green"])}Audio\n(press enter for Audio): ')
-
-        if decision == '1':
+        decs = decision()
+        if decs == '1':
             utube.Video()
-        elif decision == '2' or decision == '':
+        elif decs == '2' or decs == '':
             utube.Audio()
         else:
             print(f'couldn\'t recognize the request')
